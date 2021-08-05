@@ -1,34 +1,33 @@
 import {combineReducers} from 'redux';
-import { FETCH_POSTS, CHANGE_BOOKS } from './actions';
-const axios = require('axios')
-
-
+import { CHANGE_CURENTPAGE, UPDATE_BOOKS, UPDATE_BOOK_COUNT} from './actions'; 
 
 const initialState = {
-    books: [
-       
-    ]
+    books: [],
+    currentPage: 1,
+    limit: 3,
+    bookCount: 0,
+    pageCount: 0,
+    gotResponse:false
 }
 
-const booksReducer = async (state = initialState, action) => {
+const booksReducer = (state = initialState, action) => {
     switch(action.type){
-        case FETCH_POSTS:{
-            const response = await axios.get(action.payload);
-            // return [ action.payload.data, ...state ]
-            alert("response: " + JSON.stringify(response))
-            return {...state, books: response.data};
-           
+        case UPDATE_BOOKS:{
+            // alert('payload: ' + JSON.stringify(action.payload))
+            return {...state, books:action.payload}   
         }
-        case CHANGE_BOOKS:{
-            alert(JSON.stringify(action.payload))
-            return state;
+        case UPDATE_BOOK_COUNT:{
+            // alert('limit: ' + state.state.limit)
+            const pageCount = Math.ceil(action.payload / state.state.limit)
+            return {...state, bookCount:action.payload, pageCount:pageCount}
+        }
+        case CHANGE_CURENTPAGE:{
+            return {...state, currentPage: action.payload}
         }
         default: {
-            return state;
+            return {state};
         }
     }
 }
 
-
-
-export const postsReducer = combineReducers({allbooks: booksReducer});
+export const postsReducer = combineReducers({books: booksReducer});

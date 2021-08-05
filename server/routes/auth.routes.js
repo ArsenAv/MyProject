@@ -76,21 +76,18 @@ router.post('/login',
 })
 
 router.get('/books', function(req, res) {
-    // Book.find({}, function(err, books) {
-    //     res.render('/books', {books: books});
-    // });
-    Book.find({},
-        function(err, books) {
-            var booksMap = [];
-        
-            books.forEach(function(book) {
-                booksMap.push(book);
-            });
-        
-            res.send(booksMap);  
-    });
+    const page = req.query.page
+    const pageItemsCount = Number(req.query.limit)
+    const startIndex = (page - 1) * pageItemsCount
+    Book.find().limit(pageItemsCount).skip(startIndex)
+        .then(books => res.json(books))
+        .catch(error => res.json('Error: ' + error));
   });
-
+router.get('/bookcount', function(req, res){
+    Book.count()
+        .then(bookCount => res.json(bookCount))
+        .catch(error => res.json('Error: ' + error));
+})
 
 
 module.exports = router

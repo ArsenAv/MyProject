@@ -1,6 +1,9 @@
 import React, { useContext } from 'react';
 import{NavLink, useHistory} from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
+import Nav from 'react-bootstrap/Nav'
+import 'bootstrap/dist/css/bootstrap.css';
+import '../components/Navbar.css'
 
 
 export const Navbar = () =>{
@@ -12,16 +15,21 @@ export const Navbar = () =>{
         history.push('/')
     }
     return(
-        <nav>
-            <div className="nav-wrapper green darken-1 ">
-              <a href="#" className="brand-logo">MyLibrary</a>
-              <ul id="nav-mobile" className="right hide-on-med-and-down">
-                <li><NavLink to="/allbooks">AllBooks</NavLink></li>
-                <li><NavLink to="/book">Books</NavLink></li>
-                <li><a href="/" onClick ={logoutHendler}>LogOut</a></li>
-              </ul>
-            </div>
-        </nav>
+    <Nav className = "nav ">
+        <Nav.Item className = "navitem">
+            <Nav.Link eventKey="link-1">
+               <NavLink className = "link" to="/allbooks">AllBooks</NavLink> 
+            </Nav.Link>
+        </Nav.Item>
+        <Nav.Item>
+        <Nav.Link eventKey="link-2">
+             <NavLink className = "link" to="/book">Books</NavLink>
+        </Nav.Link>
+        </Nav.Item>
+        <Nav.Item >
+        <Nav.Link eventKey="link-3"><span href="/"  className = "link" onClick ={logoutHendler}>LogOut</span></Nav.Link>
+        </Nav.Item>
+    </Nav>
         
     )
 }
