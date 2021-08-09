@@ -21,8 +21,15 @@
     width: 50px !important;
   }
 /* form */
-.pagination{
-   display: flex;
-   justify-content: space-around;
-   padding: 0em;
+
+.bookcase{
+    width: 100%;
+    text-align: center;
+    margin: 0 auto;
+    display: flex;
+ 
+}
+.inputgroup{
+    margin: 0 auto;
+
 }

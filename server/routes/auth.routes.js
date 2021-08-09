@@ -4,6 +4,7 @@ const config = require('config')
 const jwt = require('jsonwebtoken')
 const User = require('../models/User')
 const Book = require('../models/Book')
+const Comment = require('../models/Comment')
 const {check, validationResult} = require('express-validator')
 const router = Router()
 
@@ -87,6 +88,29 @@ router.get('/bookcount', function(req, res){
     Book.count()
         .then(bookCount => res.json(bookCount))
         .catch(error => res.json('Error: ' + error));
+})
+
+router.post('/books/comments', (req, res) => {
+    const {book_id, mail, text} = req.body
+    Book.findOne({book_id})
+        .then(book => {
+            const newComent = new Comment( { book_id, mail, text } )
+      
+            newComent.save()
+                .then(() => res.json("Comment saved!"))
+                .catch((err) => res.json(err))
+        })
+        .catch(err => res.json('issue finding such book'))
+
+})
+
+router.get('/books/comments', function(req, res) {
+    const bookId = req.query.book_id
+    
+    Comment.find({book_id:bookId})
+        .then(comments => res.json(comments))
+        .catch(error => res.json('Error Coments: ' + error))
+
 })
 
 

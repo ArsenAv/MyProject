@@ -1,21 +1,22 @@
-import React from "react";
-import {Switch, Route, Redirect} from 'react-router-dom';
-import { AuthPage } from "./pages/AuthPage";
-import { BookPage } from "./pages/BookPage";
-import { AllBooksPage } from "./pages/AllBooksPage";
+import React from "react"
+import { Switch, Route, Redirect } from 'react-router-dom'
+import { AuthPage } from "./pages/AuthPage"
+import Book from "./components/Book"
+import { Books } from "./pages/Books"
 
 
 export const useRoutes = isAuthenticated =>{
      if(isAuthenticated){
         return(
             <Switch>
-                <Route path="/book" exact>
-                    <BookPage />
+               
+                <Route path="/books" exact>
+                    <Books />
                 </Route>
-                <Route path="/allbooks" exact>
-                    <AllBooksPage/>
+                <Route path="/books/:id" exact>
+                    <Book />
                 </Route>
-                <Redirect to ="/allbooks"/>
+                <Redirect to ="/books"/>
             </Switch>
         )
      }

@@ -18,13 +18,8 @@ export const Navbar = () =>{
     <Nav className = "nav ">
         <Nav.Item className = "navitem">
             <Nav.Link eventKey="link-1">
-               <NavLink className = "link" to="/allbooks">AllBooks</NavLink> 
+               <NavLink className = "link" to="/books">Books</NavLink> 
             </Nav.Link>
-        </Nav.Item>
-        <Nav.Item>
-        <Nav.Link eventKey="link-2">
-             <NavLink className = "link" to="/book">Books</NavLink>
-        </Nav.Link>
         </Nav.Item>
         <Nav.Item >
         <Nav.Link eventKey="link-3"><span href="/"  className = "link" onClick ={logoutHendler}>LogOut</span></Nav.Link>

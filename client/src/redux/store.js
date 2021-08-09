@@ -1,5 +1,10 @@
-import {createStore, applyMiddleware} from 'redux';
-import {postsReducer} from './reducers'
-import thunk from 'redux-thunk'
+import { configureStore } from "@reduxjs/toolkit"
+import booksReducer from './booksSlice'
 
-export const store = createStore(postsReducer,applyMiddleware(thunk));
+const store = configureStore({
+    reducer: {
+        books: booksReducer
+    }
+})
+
+export default store
