@@ -5,10 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import Col from 'react-bootstrap/Col'
 import Accordion from 'react-bootstrap/Accordion'
 export default function BookBox({book}) {
-    // const toBookLink = (e) => {
-    //     e.preventDefault();
-    //     history.push('/your-route');
-    // };
+   
     return(
       
     <Col>

@@ -10,7 +10,7 @@ import Img1 from "../CaruselImg/Img1.jpg"
 import Img2 from "../CaruselImg/Img2.jpg"
 import Img3 from "../CaruselImg/Img3.jpg"
 import { getBooksThunk, getBookCountThunk, updateCurrentPage } from '../redux/booksSlice'
-
+import {users} from "../redux/userSlice"
 
 export const Books = () =>{
     const books = useSelector(state => state.books.books);
@@ -18,9 +18,9 @@ export const Books = () =>{
     const pageCount = useSelector(state => state.books.pageCount)
     const currentPage = useSelector(state => state.books.currentPage)
     const dispatch = useDispatch();
-
-    useEffect(() => { dispatch(getBookCountThunk()) }, [])
-    useEffect(() => { dispatch(getBooksThunk(currentPage, limit)) }, [currentPage])
+    const verify = useSelector(state => state.users.token)
+    useEffect(() => { dispatch(getBookCountThunk(verify)) }, [])
+    useEffect(() => { dispatch(getBooksThunk(currentPage, limit,verify)) }, [currentPage])
     
     const handleChangePage = (newPage) => {
         dispatch(updateCurrentPage(newPage))
@@ -39,7 +39,7 @@ export const Books = () =>{
     return(
         <div className = "container-fluid">
              <div style={{ display: 'block', width: "80%", padding: 30 , margin: "0 auto"}}>
-                <Carousel >
+                <Carousel interval={2000}>
                 <Carousel.Item >
                     <img
                     className="d-block w-100"

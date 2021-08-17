@@ -1,8 +1,10 @@
+html,body{
+    height: 100%;
+}
 .form-inline {
-    width: 100%;
-    position: absolute;
-    margin-left: 19em;
-    margin-top: 15em;
+    float: right;
+    width: 450px;
+    padding: 30px;
   }
   
   .form-group {
@@ -33,3 +35,14 @@
     margin: 0 auto;
 
 }
+.btnout1{
+   position: relative;
+   left: 20px;
+   top: 10px;
+
+}
+.btnout2{
+    position: relative;
+    top: 10px;
+ 
+ }

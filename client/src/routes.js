@@ -3,20 +3,20 @@ import { Switch, Route, Redirect } from 'react-router-dom'
 import { AuthPage } from "./pages/AuthPage"
 import Book from "./components/Book"
 import { Books } from "./pages/Books"
+import './auth.css'
 
 
 export const useRoutes = isAuthenticated =>{
      if(isAuthenticated){
         return(
             <Switch>
-               
                 <Route path="/books" exact>
                     <Books />
                 </Route>
                 <Route path="/books/:id" exact>
                     <Book />
                 </Route>
-                <Redirect to ="/books"/>
+                <Redirect to ="/"/>
             </Switch>
         )
      }
@@ -24,7 +24,7 @@ export const useRoutes = isAuthenticated =>{
          <Switch>
              <Route path ="/" exact>
                  <AuthPage/>
-             </Route>
+             </Route> 
              <Redirect to ="/"/>
          </Switch>
      )

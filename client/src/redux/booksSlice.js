@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 import axios from 'axios'
-
+import users from './userSlice'
+console.log(users)
 export const booksSlice = createSlice({
     name: 'booksSlice',
     initialState: {
@@ -32,9 +33,11 @@ export const booksSlice = createSlice({
     }
 })
 
-export const getBooksThunk = (currentPage, limit) => {
+export const getBooksThunk = (currentPage, limit, token) => {
+     
     return (dispatch) => {
-        axios.get(`http://localhost:5000/api/auth/books?page=${currentPage || 1}&limit=${limit || 3}`)
+        axios.get(`http://localhost:5000/books/?page=${currentPage || 1}&limit=${limit || 3}`, 
+                {headers:{authorization: `Bearer ${token}`}})
             .then((res) => {
                 dispatch(updateBooks(res.data))
             })
@@ -42,27 +45,27 @@ export const getBooksThunk = (currentPage, limit) => {
     }
 }
 
-export const getBookCountThunk = () => {
+export const getBookCountThunk = (token) => {
     return (dispatch) => {
-        axios.get(`http://localhost:5000/api/auth/bookcount`)
+        axios.get(`http://localhost:5000/books/bookcount`,{headers:{authorization: `Bearer ${token}`}} )
             .then((res) => dispatch(updateBookCount(res.data)))
             .catch(error => alert('Error update count'))
     }
 }
 
 
-export const getCommentsThunk = (book_id) => {
+export const getCommentsThunk = (book_id, token) => {
     return (dispatch) => {
-        axios.get(`http://localhost:5000/api/auth/books/comments?book_id=${book_id}`)
+        axios.get(`http://localhost:5000/books/comments?book_id=${book_id}`,{headers:{authorization: `Bearer ${token}`}})
         .then((res) => {
             dispatch(updateComments(res.data))
         })
         .catch(error => alert('Error send comments data '))
     }
 }
-export const sendCommentThunk = (book_id, mail, text) => {
+export const sendCommentThunk = (book_id, mail, text, token) => {
     return (dispatch) => {
-        axios.post(`http://localhost:5000/api/auth/books/comments`, {book_id, mail, text})
+        axios.post(`http://localhost:5000/books/comments`, {book_id, mail, text},{headers:{authorization: `Bearer ${token}`}})
         .then((res) => dispatch(addComment({book_id, mail, text})))
         .catch(error => alert('Error send comments data '))
     }

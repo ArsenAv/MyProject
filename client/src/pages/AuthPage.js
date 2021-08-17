@@ -1,64 +1,54 @@
-import React, {useContext, useEffect, useState} from 'react';
-import { AuthContext } from '../context/AuthContext';
-import { useHttp } from '../hooks/http.hook';
+import React, {useState} from 'react';
+import { useDispatch } from 'react-redux';
 import { useMessage } from '../hooks/message.hook';
+import { sendRegistrDataThunk ,sendLoginDataThunk } from '../redux/userSlice';
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 import 'bootstrap/dist/css/bootstrap.min.css';
-import '../index.css'
+import '../auth.css'
+import Img4 from "../CaruselImg/Img4.jpg"
 
 
 export const AuthPage = () =>{
-    const auth = useContext(AuthContext);
-    const message = useMessage();
-    const {loading, error, request, clearError} = useHttp()
+    const dispatch = useDispatch();
     const [form, setForm] = useState({
         email: "", password: ""
     });
-    useEffect( () => {
-        message(error)
-        clearError()
-    }, [error, message, clearError])
 
+     
     
-    const formHandler = event =>{
-        setForm({...form, [event.target.name]: event.target.value})
-    }
-    const registerHandler = async () => {
-        try{
-            const data = await (request('/api/auth/register', 'POST', {...form}))
-            message(data.message)
-        } catch (e){
-            
-        }
-    }
-    const loginHandler = async () => { 
-        try{
-        const data = await (request('/api/auth/login', 'POST', {...form}))
-           auth.login(data.token, data.userId);
-        } catch (e){
-          
-        }
-    }
+     const formHandler = event =>{
+         setForm({...form, [event.target.name]: event.target.value})
+     }
+     const registerHandler = () =>{
+        dispatch(sendRegistrDataThunk({...form}.email, {...form}.password))
+     }
+     const loginHandler = () =>{
+        dispatch(sendLoginDataThunk({...form}.email, {...form}.password))
+     }
+
     return(
-      
-    <Form className = " form-inline  " >  
-        <Form.Group className="mb-2" controlId="formGroupEmail">
-            <Form.Label htmlFor ="email">Email address</Form.Label>
-            <Form.Control value={form.email} placeholder ="" name = "email" type="text" onChange = {formHandler}  />
+    <div  className = "auth" > 
+    <div>
+    <Form className = "form-inline" >  
+        <Form.Group className="mb-3 " >
+            <Form.Label htmlFor ="email">Email</Form.Label>
+            <Form.Control className = "forminput"value={form.email} placeholder ="" name = "email" type="text" onChange = {formHandler}  />
     
          </Form.Group>
-        <Form.Group className="mb-2" controlId="formGroupPassword">
+        <Form.Group className="mb-3">
              <Form.Label htmlFor="email">Password</Form.Label>
-             <Form.Control placeholder =""  type="password" value={form.password} name = "password" onChange = {formHandler} />
-         <Button variant="primary" disabled = {loading} onClick = {loginHandler}>
-                 Login
-        </Button>
-         <Button variant="primary" disabled = {loading} onClick = {registerHandler}>
+             <Form.Control placeholder ="" className = "forminput " type="password" value={form.password} name = "password" onChange = {formHandler} />
+         <Button variant="outline-secondary" className = "btnout2" onClick = {loginHandler}>
+                 Login 
+         </Button>
+         <Button variant="outline-secondary"  className = "btnout1" onClick = {registerHandler}>
+              
                  Register
          </Button>
         </Form.Group>
     </Form>
-    
+    </div>
+    </div>
     )
 }

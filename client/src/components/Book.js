@@ -9,6 +9,7 @@ import FormControl from 'react-bootstrap/FormControl'
 import ListGroup from 'react-bootstrap/ListGroup'
 import "../index.css"
 import { getCommentsThunk, sendCommentThunk } from '../redux/booksSlice'
+import {users} from "../redux/userSlice"
 
 import { withRouter } from 'react-router-dom'
 function Book(props) {
@@ -18,16 +19,17 @@ function Book(props) {
     const mailInputRef = useRef()
     const bookId = props.match.params.id
     const books = useSelector(state => state.books.books)
+    const verify = useSelector(state => state.users.token)
     const comment = useSelector(state => state.books.comments)
     const book = books.find(book => book._id === bookId)
     const dispatch = useDispatch();
 
-    useEffect(() => { dispatch(getCommentsThunk(bookId)) }, [])
+    useEffect(() => { dispatch(getCommentsThunk(bookId,verify)) }, [])
    
     const handleWord = () =>{
          const inputValue =  inputRef.current.value
          const mailValue = mailInputRef.current.value
-         dispatch(sendCommentThunk(bookId, inputValue, mailValue)) 
+         dispatch(sendCommentThunk(bookId, inputValue, mailValue, verify)) 
     }
    
     return(
