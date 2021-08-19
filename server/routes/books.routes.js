@@ -54,11 +54,11 @@ router.post('/rating', (req, res) => {
             const averageRating = Math.round(ratings.reduce((a, b) => Number(a) + Number(b), 0) / ratings.length)
             // res.json(ratings)
             // res.json(averageRating)
-            Book.findOneAndUpdate(book_id, {ratings: ratings, averagerate: averageRating}, 
+            Book.findOneAndUpdate(book_id, {ratings: ratings, averagerate: averageRating},
                 {upsert: true}, 
                 function(err, doc){
-                    if (err) return res.status(500, {error: err});
-                    return res.send(`${averageRating}`);
+                    if (err) return res.status(500, {error: err})
+                    return res.send(`${averageRating}`)
             })
                 
         })
@@ -76,14 +76,14 @@ router.get('/rating', function(req, res) {
 
 })
 router.get('/search', function(req, res) {
-    const author = req.query.author
+    const title = req.query.title
     const sort = Number(req.query.sort)
-    if (author && sort) {
-        Book.find({'author': { "$regex": author, "$options": "i" }}).sort({'title':sort})
+    if (title && sort) {
+        Book.find({'title': { "$regex": title, "$options": "i" }}).sort({'title':sort})
             .then(book => res.json(book))
             .catch(error => res.json('Error Coments: ' + error))
-    } else if (author) {
-        Book.find({'author': { "$regex": author, "$options": "i" }})
+    } else if (title) {
+        Book.find({'author': { "$regex": title, "$options": "i" }})
             .then(book => res.json(book))
             .catch(error => res.json('Error Coments: ' + error))
     }else {
@@ -112,7 +112,7 @@ router.get('/favorites', function(req, res) {
 router.post('/favorites', (req, res) => {
     const token = req.headers.authorization
     const tokenArr = token.split(' ');
-    const decoded = jwt.verify(tokenArr[1], config.get('jwtSecret'));
+    const decoded = jwt.verify(tokenArr[1], config.get('jwtSecret'))
     const userId = decoded.userId
 
     const {book_id} = req.body
@@ -126,17 +126,14 @@ router.post('/favorites', (req, res) => {
             Favorites.findOneAndUpdate(userId, {userId, bookIds: [...currentBookIds, book_id]}, 
                 {upsert: true}, 
                 function(err, doc){
-                    if (err) return res.status(500, {error: err});
-                    return res.send(`Successfully added new book to favorites!`);
+                    if (err) return res.status(500, {error: err})
+                    Book.findOne({'_id':book_id})
+                        .then(book => res.json(book))
+                        .catch(error => res.json('Error getting book: ' + error))
+
             })
         })
         .catch(error => res.json('Error finding such favorite: ' + error))
 })
-
-// post
-// body with user_id, book_id
-// find Favorites by user_id
-// favorite.bookIds.push(book_id)
-// favorite.save()
 
 module.exports = router

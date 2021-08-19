@@ -1,6 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
 import axios from 'axios'
-import users from './userSlice'
 
 export const booksSlice = createSlice({
     name: 'booksSlice',
@@ -13,8 +12,7 @@ export const booksSlice = createSlice({
         comments: [],
         averageRating: 0,
         filtrbooks: [],
-        favorite: "",
-        favoritebooks: []
+        favorites: []
     },
     reducers: {
         updateBooks: (state, action) => {
@@ -40,11 +38,11 @@ export const booksSlice = createSlice({
         filtrbooks: (state,action) =>{
             state.books = action.payload
         },
-        sendFavorite: (state, action) => {
-               state.favorite = action.payload
+        updateFavorites: (state, action) => {
+            state.favorites = action.payload
         },
         saveFavorite: (state, action) => {
-            state.favoritebooks.push(action.payload)
+            state.favorites.push(action.payload)
         }
     }
 })
@@ -106,18 +104,18 @@ export const getRatingThunk = (book_id, token) => {
 }
 export const getSearchBooks = (filedword, sortvalue, token) => {
     return (dispatch) => {
-        axios.get(`http://localhost:5000/books/search?author=${filedword}&sort=${sortvalue}`,{headers:{authorization: `Bearer ${token}`}})
+        axios.get(`http://localhost:5000/books/search?title=${filedword}&sort=${sortvalue}`,{headers:{authorization: `Bearer ${token}`}})
         .then((res) => {
             dispatch(filtrbooks(res.data))
         })
         .catch(error => alert('Error search data '))
     }
 }
-export const sendFavoriteThunk = (token,book_id) => {
+export const sendFavoriteThunk = (token, book_id) => {
     return(dispatch) => {
         axios.post(`http://localhost:5000/books/favorites`,{book_id},{headers:{authorization: `Bearer ${token}`}})
         .then((res) => {
-            dispatch(sendFavorite(res.data))
+            dispatch(saveFavorite(res.data))
         })
         .catch(error => alert('Error search data '))
     }
@@ -127,7 +125,7 @@ export const getFavoritesThunk = (token) => {
         
         axios.get(`http://localhost:5000/books/favorites`,{headers:{authorization: `Bearer ${token}`}})
         .then((res) => {
-            dispatch(saveFavorite(res.data))
+            dispatch(updateFavorites(res.data))
         })
         .catch(error => alert('Error search data '))
     }
@@ -135,5 +133,5 @@ export const getFavoritesThunk = (token) => {
 
 
 
-export const { updateBooks, updateBookCount, updateCurrentPage, addComment, updateComments, addRating, updateAverageRating, filtrbooks,sendFavorite,saveFavorite} = booksSlice.actions
+export const { updateBooks, updateBookCount, updateCurrentPage, addComment, updateComments, addRating, updateAverageRating, filtrbooks,updateFavorites,saveFavorite} = booksSlice.actions
 export default booksSlice.reducer

@@ -1,15 +1,15 @@
-import React from 'react';
-import { useDispatch} from 'react-redux';
-import{NavLink} from 'react-router-dom';
+import React from 'react'
+import { useDispatch} from 'react-redux'
+import{NavLink} from 'react-router-dom'
 import {logoutUser} from '../redux/userSlice'
 import Nav from 'react-bootstrap/Nav'
-import 'bootstrap/dist/css/bootstrap.css';
+import 'bootstrap/dist/css/bootstrap.css'
 import '../components/Navbar.css'
 
 
 
 export const Navbar = () =>{
-    const dispatch = useDispatch();
+    const dispatch = useDispatch()
     const logoutHendler = () => {
         dispatch(logoutUser())    
     }

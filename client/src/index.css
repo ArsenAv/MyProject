@@ -33,10 +33,9 @@ html,body{
 }
 .bookcase{
     width: 100%;
-    text-align: center;
     margin: 0 auto;
     display: flex;
- 
+    justify-content: center;
 }
 .inputgroup{
     margin: 0 auto;
@@ -80,6 +79,15 @@ html,body{
     
  }
  .commentbox{
+    display: flex;
+ }
+ .commentsbox{
+    display: flex;
+ }
+ .ratingbox{
      display: flex;
-     justify-content: center;
+ }
+ .RateStar{
+     color:tomato;
+     font-size: 20px;
  }

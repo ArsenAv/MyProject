@@ -10,12 +10,9 @@ import Button from 'react-bootstrap/Button'
 import Img1 from "../CaruselImg/Img1.jpg"
 import Img2 from "../CaruselImg/Img2.jpg"
 import Img3 from "../CaruselImg/Img3.jpg"
-import ModalBody from 'react-bootstrap/ModalBody'
-import ModalTitle from 'react-bootstrap/ModalTitle'
 import ListGroup from 'react-bootstrap/ListGroup'
 import Modal from 'react-bootstrap/Modal'
 import { getBooksThunk, getBookCountThunk, updateCurrentPage, getSearchBooks } from '../redux/booksSlice'
-import {users} from "../redux/userSlice"
 import Form from 'react-bootstrap/Form'
 import "../index.css"
 
@@ -26,7 +23,6 @@ export const Books = () =>{
     const checkRef = useRef()
     const books = useSelector(state => state.books.books);
     const limit = useSelector(state => state.books.limit)
-    const filtr = useSelector(state => state.books.filtrbooks)
     const pageCount = useSelector(state => state.books.pageCount)
     const currentPage = useSelector(state => state.books.currentPage)
     const dispatch = useDispatch();
@@ -154,11 +150,11 @@ export const Books = () =>{
                 </Button>
                 <div>
                     <div className = "form-check form-check-inline">
-                            <input ref = {checkRef} className ="form-check-input" type="checkbox" id="inlineCheckbox1"  onChange ={ e => setCheck(e.target.value)} value={1}/>
+                            <input ref = {checkRef} className ="form-check-input" type="checkbox" id="inlineCheckbox1"  onChange ={ e => setCheck(1)} value={check} />
                             <label className ="form-check-label" >A-Z</label>
                      </div>
                             <div className ="form-check form-check-inline">
-                            <input ref = {checkRef}  className ="form-check-input" type="checkbox" id="inlineCheckbox2"  onChange ={e=> setCheck(e.target.value)} value={-1}/>
+                            <input ref = {checkRef}  className ="form-check-input" type="checkbox" id="inlineCheckbox2"  onChange ={e=> setCheck(-1)} value={check}/>
                             <label className ="form-check-label" >Z-A</label>
                     </div>
                 </div>
@@ -175,8 +171,8 @@ export const Books = () =>{
             </Row>
             </div>
             <div style={{ display: "flex", justifyContent: "center", marginTop: "50px" }}>
-                {pages.map(page => 
-                    <Pagination className=" pagination-sm paginate"> 
+                {pages.map((page,index) => 
+                    <Pagination key = {index} className=" pagination-sm paginate"> 
                         <Pagination.Item className = "page-item">
                             <Link to={page.ref} className="page-link" onClick={() => handleChangePage(page.number)}>
                         {page.number}

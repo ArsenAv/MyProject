@@ -1,8 +1,8 @@
-import React from 'react';
-import { useSelector, useDispatch,} from "react-redux";
-import { useEffect} from "react";
-import 'bootstrap/dist/css/bootstrap.min.css';
-import Row from 'react-bootstrap/Row';
+import React from 'react'
+import { useSelector, useDispatch,} from "react-redux"
+import { useEffect} from "react"
+import 'bootstrap/dist/css/bootstrap.min.css'
+import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import Accordion from 'react-bootstrap/Accordion'
 import Card from 'react-bootstrap/Card'
@@ -12,8 +12,9 @@ import { getFavoritesThunk} from '../redux/booksSlice'
 export const Favorites = () =>{
     const dispatch = useDispatch()
     let token = useSelector(state => state.users.token)
+    const favorites = useSelector(state => state.books.favorites)
     useEffect(() => { dispatch(getFavoritesThunk(token)) }, [])
-    const favorites = useSelector(state => state.books.favoritebooks)
+ 
     
     console.log(favorites)
 
@@ -23,7 +24,7 @@ export const Favorites = () =>{
     return(
       <div className = "container-fluid">
             <Row xs={1} md={2} lg={3} className="g-4">
-                { favorites && favorites.length > 0 && favorites[0].map(favorite => {
+                { favorites && favorites.length > 0 && favorites.map(favorite => {
                     return(
                             <div>
                                     <Col>
