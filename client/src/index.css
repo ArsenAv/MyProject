@@ -23,7 +23,14 @@ html,body{
     width: 50px !important;
   }
 /* form */
-
+.searchform{
+    width: 50%;
+    display: flex;
+    justify-content: space-between;
+}
+.searchinput{
+    height: 30px;
+}
 .bookcase{
     width: 100%;
     text-align: center;
@@ -45,4 +52,34 @@ html,body{
     position: relative;
     top: 10px;
  
+ }
+ .bookscont{
+     background-color: #f6ebe1;
+ }
+ .bookfiltr{
+     
+    height: 40px;
+    display: flex;
+    padding: 5px;
+    background-color: #a19589;
+    color: white;
+    justify-content: space-between 
+     
+ }
+ .bookbox{
+     margin-top: 50px;
+ }
+ .paginatate{
+     padding-left: 15px !important;
+ }
+ .searchbtn{
+    position: relative;
+    left: 248px;
+    top: -4px;
+    height: 37px;
+    
+ }
+ .commentbox{
+     display: flex;
+     justify-content: center;
  }

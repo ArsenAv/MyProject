@@ -20,6 +20,11 @@ export const Navbar = () =>{
                <NavLink className = "link" to="/books">Books</NavLink> 
             </Nav.Link>
         </Nav.Item>
+        <Nav.Item className = "navitem">
+            <Nav.Link eventKey="link-2">
+               <NavLink className = "link" to="/books/favorites">Favorites</NavLink> 
+            </Nav.Link>
+        </Nav.Item>
         <Nav.Item >
         <Nav.Link eventKey="link-2">
                <NavLink className = "link" to="/" onClick ={logoutHendler}>Logout</NavLink> 

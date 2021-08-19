@@ -1,8 +1,10 @@
 const Book = require('../models/Book')
 const Comment = require('../models/Comment')
-const Rating = require('../models/Rating')
-const {Router} = require('express')
+const {Router} = require('express');
+const Favorites = require('../models/favorites');
 const router = Router()
+const jwt = require('jsonwebtoken')
+const config = require('config')
 
 router.get('/', function(req, res) {
     const page = req.query.page
@@ -56,7 +58,7 @@ router.post('/rating', (req, res) => {
                 {upsert: true}, 
                 function(err, doc){
                     if (err) return res.status(500, {error: err});
-                    return res.send('Succesfully saved.');
+                    return res.send(`${averageRating}`);
             })
                 
         })
@@ -73,5 +75,68 @@ router.get('/rating', function(req, res) {
         .catch(error => res.json('Error Coments: ' + error))
 
 })
+router.get('/search', function(req, res) {
+    const author = req.query.author
+    const sort = Number(req.query.sort)
+    if (author && sort) {
+        Book.find({'author': { "$regex": author, "$options": "i" }}).sort({'title':sort})
+            .then(book => res.json(book))
+            .catch(error => res.json('Error Coments: ' + error))
+    } else if (author) {
+        Book.find({'author': { "$regex": author, "$options": "i" }})
+            .then(book => res.json(book))
+            .catch(error => res.json('Error Coments: ' + error))
+    }else {
+        res.json('No search text!')
+    }
+
+})
+router.get('/favorites', function(req, res) {
+    const token = req.headers.authorization
+    const tokenArr = token.split(' ');
+    const decoded = jwt.verify(tokenArr[1], config.get('jwtSecret'));
+    const userId = decoded.userId
+    // res.json(userId)
+    Favorites.findOne({userId})
+        .then(favorite => {
+            Book.find({"_id":{ $in: favorite.bookIds}})
+                .then(book => res.send(book))
+                .catch(error => res.json('Cant find book by id: ' + error))
+        })
+        .catch(error => res.json('Cant find favorite by userId: ' + error))
+
+    // 1. Favorites.find userId to get bookIds
+    // then => Book.find {"_id":{ $in: favorite.bookIds}} => then return book
+})
+
+router.post('/favorites', (req, res) => {
+    const token = req.headers.authorization
+    const tokenArr = token.split(' ');
+    const decoded = jwt.verify(tokenArr[1], config.get('jwtSecret'));
+    const userId = decoded.userId
+
+    const {book_id} = req.body
+    const options = { upsert: true, new: true, setDefaultsOnInsert: true }
+    Favorites.findOne({userId})
+        .then(favorite => {
+            let currentBookIds = []
+            if (favorite) {
+                currentBookIds = favorite.bookIds
+            }
+            Favorites.findOneAndUpdate(userId, {userId, bookIds: [...currentBookIds, book_id]}, 
+                {upsert: true}, 
+                function(err, doc){
+                    if (err) return res.status(500, {error: err});
+                    return res.send(`Successfully added new book to favorites!`);
+            })
+        })
+        .catch(error => res.json('Error finding such favorite: ' + error))
+})
+
+// post
+// body with user_id, book_id
+// find Favorites by user_id
+// favorite.bookIds.push(book_id)
+// favorite.save()
 
 module.exports = router

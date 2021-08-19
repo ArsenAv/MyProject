@@ -1,12 +1,11 @@
 import React, {useState} from 'react';
 import { useDispatch } from 'react-redux';
-import { useMessage } from '../hooks/message.hook';
+
 import { sendRegistrDataThunk ,sendLoginDataThunk } from '../redux/userSlice';
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../auth.css'
-import Img4 from "../CaruselImg/Img4.jpg"
 
 
 export const AuthPage = () =>{

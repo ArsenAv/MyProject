@@ -8,8 +8,9 @@ import Button from 'react-bootstrap/Button'
 import FormControl from 'react-bootstrap/FormControl'
 import ListGroup from 'react-bootstrap/ListGroup'
 import "../index.css"
-import { getCommentsThunk, sendCommentThunk } from '../redux/booksSlice'
+import { getCommentsThunk, sendCommentThunk, sendRatingThunk, getRatingThunk, sendFavoriteThunk} from '../redux/booksSlice'
 import {users} from "../redux/userSlice"
+import ReactStars from "react-rating-stars-component";
 
 import { withRouter } from 'react-router-dom'
 function Book(props) {
@@ -17,21 +18,28 @@ function Book(props) {
     const [mail,setMail] = useState("")
     const inputRef = useRef()
     const mailInputRef = useRef()
-    const bookId = props.match.params.id
+    let bookId = props.match.params.id
     const books = useSelector(state => state.books.books)
-    const verify = useSelector(state => state.users.token)
+    let token = useSelector(state => state.users.token)
     const comment = useSelector(state => state.books.comments)
-    const book = books.find(book => book._id === bookId)
-    const dispatch = useDispatch();
-
-    useEffect(() => { dispatch(getCommentsThunk(bookId,verify)) }, [])
-   
+    const Rating = useSelector(state => state.books.averageRating)
+    const book  = books.find(book => book._id === bookId)
+    const dispatch = useDispatch()
+    useEffect(() => { dispatch(getCommentsThunk(bookId,token)) }, [])
+    useEffect(() => { dispatch(getRatingThunk(bookId,token)) }, [])
     const handleWord = () =>{
          const inputValue =  inputRef.current.value
          const mailValue = mailInputRef.current.value
-         dispatch(sendCommentThunk(bookId, inputValue, mailValue, verify)) 
+         dispatch(sendCommentThunk(bookId, inputValue, mailValue, token)) 
     }
-   
+    const ratingChanged = (newRating) => {
+        console.log(newRating)
+        dispatch(sendRatingThunk(bookId, newRating, token))
+    };
+    const handlefavorite = () => {
+        dispatch(sendFavoriteThunk(token,String(bookId)))
+    }
+      
     return(
         <div className = "container-fluid bookcase">
             <div className = "row">
@@ -41,13 +49,23 @@ function Book(props) {
              <Card.Title>{book.title}</Card.Title>
              <Card.Subtitle className="mb-2 text-muted">{book.author}</Card.Subtitle>
              <Card.Text>
-                 
                  {book.description}
              </Card.Text>
              </Card.Body>
          </Card>
+         <ReactStars
+            count={5}
+            onChange={ratingChanged}
+            size={24}
+            activeColor="#ffd700"
+            />
+            <span>{Rating}</span>
+         </div>
+         <div>
+         <Button onClick = {handlefavorite} variant="warning">Submit</Button>
          </div>
         <div className = "col-md-6">
+            
          <InputGroup className="col-lg-3 ">
              
               <InputGroup.Text  id="inputGroup-sizing-default">Your Comment</InputGroup.Text>
@@ -57,7 +75,7 @@ function Book(props) {
               />
                    
              
-              <InputGroup.Text  id="inputGroup-sizing-default">Your Mail</InputGroup.Text>
+              <InputGroup.Text  id="inputGroup-sizing-default">Your Name</InputGroup.Text>
               <FormControl ref ={mailInputRef} onChange = {e => setMail(e.target.value)} value = {mail}
                 aria-label="Default"
                 aria-describedby="inputGroup-sizing-default"
@@ -66,9 +84,12 @@ function Book(props) {
               </InputGroup>
               </div>
               <div>{comment && comment.length > 0 && comment.map(comment => {
-                    return <ListGroup>
-                                <ListGroup.Item variant="warning"><span>{comment.mail}:</span>{comment.text}</ListGroup.Item>
-                           </ListGroup>
+                return  <ListGroup>
+                        <div className = "commentbox"> 
+                            <ListGroup.Item variant="secondary">{comment.mail}</ListGroup.Item>
+                            <ListGroup.Item variant="warning">{comment.text}</ListGroup.Item>
+                        </div>
+                        </ListGroup>
               })}</div>
          </div>
         </div>

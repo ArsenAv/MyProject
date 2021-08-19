@@ -11,7 +11,7 @@ export default function BookBox({book}) {
     <Col>
          <Card style={{ width: '18rem' }}>
              <Card.Body>
-             <Link to = {`/books/${book._id}`}><Card.Title>{book.title}</Card.Title></Link>
+             <Link to = {`/books/${book._id}`}><Card.Title >{book.title}</Card.Title></Link>
              <Card.Subtitle className="mb-2 text-muted">{book.author}</Card.Subtitle>
              <Accordion defaultActiveKey="0">
                 <Accordion.Item eventKey="1">

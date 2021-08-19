@@ -4,7 +4,8 @@ import { AuthPage } from "./pages/AuthPage"
 import Book from "./components/Book"
 import { Books } from "./pages/Books"
 import './auth.css'
-
+import {Favorites} from "./pages/Favorites"
+ 
 
 export const useRoutes = isAuthenticated =>{
      if(isAuthenticated){
@@ -12,6 +13,9 @@ export const useRoutes = isAuthenticated =>{
             <Switch>
                 <Route path="/books" exact>
                     <Books />
+                </Route>
+                <Route path="/books/favorites" exact>
+                    <Favorites/>
                 </Route>
                 <Route path="/books/:id" exact>
                     <Book />

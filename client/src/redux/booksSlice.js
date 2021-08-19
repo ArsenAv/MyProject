@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 import axios from 'axios'
 import users from './userSlice'
-console.log(users)
+
 export const booksSlice = createSlice({
     name: 'booksSlice',
     initialState: {
@@ -10,7 +10,11 @@ export const booksSlice = createSlice({
         limit: 3,
         bookCount: 0,
         pageCount: 0,
-        comments: []
+        comments: [],
+        averageRating: 0,
+        filtrbooks: [],
+        favorite: "",
+        favoritebooks: []
     },
     reducers: {
         updateBooks: (state, action) => {
@@ -29,6 +33,18 @@ export const booksSlice = createSlice({
         },
         addComment: (state, action) => {
             state.comments.push(action.payload)
+        },
+        updateAverageRating: (state, action) => {
+            state.averageRating = action.payload
+        },
+        filtrbooks: (state,action) =>{
+            state.books = action.payload
+        },
+        sendFavorite: (state, action) => {
+               state.favorite = action.payload
+        },
+        saveFavorite: (state, action) => {
+            state.favoritebooks.push(action.payload)
         }
     }
 })
@@ -70,8 +86,54 @@ export const sendCommentThunk = (book_id, mail, text, token) => {
         .catch(error => alert('Error send comments data '))
     }
 }
+export const sendRatingThunk = (book_id, new_rating, token) => {
+    return (dispatch) => {
+        axios.post(`http://localhost:5000/books/rating`, {book_id, new_rating}, {headers:{authorization: `Bearer ${token}`}})
+        .then((res) => {
+            dispatch(updateAverageRating(res.data))
+        })
+        .catch(error => alert('Error send Rating '))
+    }
+}
+export const getRatingThunk = (book_id, token) => {
+    return (dispatch) => {
+        axios.get(`http://localhost:5000/books/rating?book_id=${book_id}`,{headers:{authorization: `Bearer ${token}`}})
+        .then((res) => {
+            dispatch(updateAverageRating(res.data))
+        })
+        .catch(error => alert('Error send comments data '))
+    }
+}
+export const getSearchBooks = (filedword, sortvalue, token) => {
+    return (dispatch) => {
+        axios.get(`http://localhost:5000/books/search?author=${filedword}&sort=${sortvalue}`,{headers:{authorization: `Bearer ${token}`}})
+        .then((res) => {
+            dispatch(filtrbooks(res.data))
+        })
+        .catch(error => alert('Error search data '))
+    }
+}
+export const sendFavoriteThunk = (token,book_id) => {
+    return(dispatch) => {
+        axios.post(`http://localhost:5000/books/favorites`,{book_id},{headers:{authorization: `Bearer ${token}`}})
+        .then((res) => {
+            dispatch(sendFavorite(res.data))
+        })
+        .catch(error => alert('Error search data '))
+    }
+}
+export const getFavoritesThunk = (token) => {
+    return(dispatch) => {
+        
+        axios.get(`http://localhost:5000/books/favorites`,{headers:{authorization: `Bearer ${token}`}})
+        .then((res) => {
+            dispatch(saveFavorite(res.data))
+        })
+        .catch(error => alert('Error search data '))
+    }
+}
 
 
 
-export const { updateBooks, updateBookCount, updateCurrentPage, addComment, updateComments } = booksSlice.actions
+export const { updateBooks, updateBookCount, updateCurrentPage, addComment, updateComments, addRating, updateAverageRating, filtrbooks,sendFavorite,saveFavorite} = booksSlice.actions
 export default booksSlice.reducer
